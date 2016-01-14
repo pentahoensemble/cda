@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CDADescriptor>
+
+    <!-- DataSource definition. 
+	
+	Type controls what the datasource type is.
+	The connection and query controls how the data is fetched. These values
+	are specific to each access type
+
+	-->
+    <DataSources>
+        <Connection id="1" type="hds.hci">
+            <Url>http://10.76.16.60:8080/</Url>
+			<Property name="HciUser"></Property>
+			<Property name="HciPassword"></Property>
+        </Connection>
+    </DataSources>
+ 
+</CDADescriptor>
