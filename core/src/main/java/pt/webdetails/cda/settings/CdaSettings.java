@@ -19,10 +19,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.pentaho.reporting.libraries.resourceloader.ResourceKey;
+
 import pt.webdetails.cda.connections.Connection;
 import pt.webdetails.cda.connections.EvaluableConnection;
 import pt.webdetails.cda.connections.InvalidConnectionException;
 import pt.webdetails.cda.connections.UnsupportedConnectionException;
+import pt.webdetails.cda.connections.hci.HciConnection;
 import pt.webdetails.cda.connections.kettle.TransFromFileConnection;
 import pt.webdetails.cda.connections.metadata.MetadataConnection;
 import pt.webdetails.cda.connections.scripting.ScriptingConnection;
@@ -44,6 +46,7 @@ import pt.webdetails.cda.dataaccess.SqlDataAccess;
 import pt.webdetails.cda.dataaccess.UnionCompoundDataAccess;
 import pt.webdetails.cda.dataaccess.UnsupportedDataAccessException;
 import pt.webdetails.cda.dataaccess.XPathDataAccess;
+import pt.webdetails.cda.dataaccess.hci.HciDataAccess;
 import pt.webdetails.cda.utils.TableModelUtils;
 import pt.webdetails.cda.utils.Util;
 import pt.webdetails.cda.xml.DomTraversalHelper;
@@ -53,6 +56,7 @@ import javax.naming.OperationNotSupportedException;
 import javax.swing.table.TableModel;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.LinkedHashMap;
@@ -184,6 +188,8 @@ public class CdaSettings {
           return new UnionCompoundDataAccess( element );
         case XPATH:
           return new XPathDataAccess( element );
+        case HCI:
+            return new HciDataAccess( element );
       }
     }
     return null;
@@ -246,6 +252,8 @@ public class CdaSettings {
           return new pt.webdetails.cda.connections.sql.JndiConnection( element );
         case XPATH:
           return new XPathConnection( element );
+        case HCI:
+            return new HciConnection( element );
       }
     }
     return null;

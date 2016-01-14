@@ -18,6 +18,8 @@ import org.dom4j.Element;
 import org.pentaho.reporting.engine.classic.core.ParameterMapping;
 
 import pt.webdetails.cda.connections.AbstractConnection;
+import pt.webdetails.cda.connections.hci.HciConnection;
+import pt.webdetails.cda.connections.hci.HciConnectionInfo;
 import pt.webdetails.cda.connections.kettle.TransFromFileConnection;
 import pt.webdetails.cda.connections.kettle.TransFromFileConnectionInfo;
 import pt.webdetails.cda.connections.metadata.MetadataConnection;
@@ -72,7 +74,17 @@ public class DomVisitor {
       visit( (XPathConnection) con, conEle );
     } else if ( con instanceof TransFromFileConnection ) {
       visit( (TransFromFileConnection) con, conEle );
+    } else if ( con instanceof HciConnection ) {
+        visit( (HciConnection) con, conEle );
     }
+  }
+  
+  // ...hds.hci
+  private void visit(HciConnection con, Element ele) {
+	    final HciConnectionInfo conInfo = con.getConnectionInfo();
+	    ele.addElement("Url").addText(conInfo.getUrl());
+	    ele.addElement("Property").addAttribute( "name", "HciUser").addText(conInfo.getUsername());
+	    ele.addElement("Property").addAttribute( "name", "HciPassword").addText(conInfo.getPassword());
   }
 
   // ...metadata.metadata

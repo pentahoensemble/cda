@@ -35,7 +35,7 @@ public class ConnectionCatalog {
 
   public enum ConnectionType {
 
-    SQL, MQL, MDX, OLAP4J, SCRIPTING, NONE, XPATH, KETTLE
+    SQL, MQL, MDX, OLAP4J, SCRIPTING, NONE, XPATH, KETTLE, HCI
   }
 
   private static final String CONN_PATH = "resources/components/connections";
