@@ -7,116 +7,110 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.table.TableModel;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.pentaho.reporting.engine.classic.core.ParameterDataRow;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import pt.webdetails.cda.connections.ConnectionCatalog.ConnectionType;
-import pt.webdetails.cda.connections.InvalidConnectionException;
 import pt.webdetails.cda.connections.hci.HciConnection;
-import pt.webdetails.cda.connections.hci.HciResultsItemModel;
+import pt.webdetails.cda.connections.hci.HciFacetRequests;
 import pt.webdetails.cda.connections.hci.HciSearchRequest;
+import pt.webdetails.cda.connections.hci.HciSearchResultsModel;
 import pt.webdetails.cda.dataaccess.QueryException;
 import pt.webdetails.cda.dataaccess.SimpleDataAccess;
+import pt.webdetails.cda.utils.HttpUtil;
+import pt.webdetails.cda.utils.HttpUtil.Response;
 
 public class HciDataAccess extends SimpleDataAccess {
-	
-	private HciConnection connection; 
 	private static int offset;
+	private static String lastIndex;
+	private static String lastQuery;
+	private static final int ITEMSTORETURN = 10;
 	
 	public HciDataAccess() {}
 	
 	public HciDataAccess(final Element element ) {
 		super( element );
-		try {
-			connection = new HciConnection(element);
-		} catch (InvalidConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	protected IDataSourceQuery performRawQuery(ParameterDataRow parameterDataRow)
 			throws QueryException {
+		String url = null;
 		HciDataSourceQuery query = null;
-//		String url = buildUrl();
-//		String jsonRequest = buildRequest();
-//		Map<String, String> headerMap = new HashMap<String, String>();
-//		try {
-//			Response response = HttpUtil.doPost(url, jsonRequest, headerMap);
-//			if (response.getStatusCode() == HttpStatus.SC_CREATED) {
-//				String body = response.getBody();
-//				HciSearchResultsModel searchResults = (HciSearchResultsModel) deserializeFromJson(body, HciSearchResultsModel.class);
-//				HciTableModel model = new HciTableModel(searchResults.getResults());			
-//				query = new HciDataSourceQuery (model, null);
-//			}
-//		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		// TODO Add query execution implementation.
-		
-		List<HciResultsItemModel> results = new ArrayList<HciResultsItemModel>();
-		HciResultsItemModel result = new HciResultsItemModel("1", "Sample1", "http://10.76.16.60:8080/Sample1",
-										null, null, 0.0, null);
-		results.add(result);
-		result = new HciResultsItemModel("2", "Sample2", "http://10.76.16.60:8080/Sample2",
-										null, null, 0.0, null);
-		results.add(result);
-		result = new HciResultsItemModel("3", "Sample3", "http://10.76.16.60:8080/Sample3",
-										null, null, 0.0, null);
-		results.add(result);
-		result = new HciResultsItemModel("4", "Sample4", "http://10.76.16.60:8080/Sample4",
-										null, null, 0.0, null);
-		results.add(result);
-		
-		HciTableModel model = new HciTableModel(results);
-		
-		query = new HciDataSourceQuery (model, null);
-		
+		HciConnection connection;
+		try {
+			connection = (HciConnection) getCdaSettings().getConnection( getConnectionId() );
+			url = connection.getConnectionInfo().getUrl();
+			String jsonRequest = buildRequest();
+			Map<String, String> headerMap = new HashMap<String, String>();
+			headerMap.put("Content-Type", "application/json");
+			Response response = HttpUtil.doPost(url, jsonRequest, headerMap);
+			if (response.getStatusCode() == 200) {
+				String body = response.getBody();
+				HciSearchResultsModel searchResults = (HciSearchResultsModel) deserializeFromJson(body, HciSearchResultsModel.class);
+				HciTableModel model = new HciTableModel(searchResults.getResults());			
+				query = new HciDataSourceQuery (model, null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return query;
 	}
 
 	private String buildRequest() {
 		HciSearchRequest searchRequest = new HciSearchRequest();	
-//		SAXReader reader = new SAXReader();
-//		Document doc;
-//		try {
-//			doc = (Document) reader.read(new StringReader(getQuery()));
-//			String rootElement = doc.getRootElement().asXML();
-//			parseXMLQuery(searchRequest, doc.getRootElement());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} ]
-		
-		JAXBContext jc;
+		SAXReader reader = new SAXReader();
+		Document doc;
 		try {
-			jc = JAXBContext.newInstance(HciSearchRequest.class);
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			searchRequest = (HciSearchRequest) unmarshaller.unmarshal(new StringReader(getQuery()));
+			doc = (Document) reader.read(new StringReader(getQuery()));
+			parseXMLQuery(searchRequest, doc.getRootElement());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
 		String request = serializeToJson(searchRequest);
-		
 		return request;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseXMLQuery(HciSearchRequest searchRequest, Element ele) {
-		searchRequest.setQueryString((String) ele.selectObject( "string(./query)" ));
-		searchRequest.setSchemaName((String) ele.selectObject( "string(./schemaName)" ));
+		String indexName = (String) ele.selectObject( "string(./schemaName)" );
+		String queryString = (String) ele.selectObject( "string(./query)" );
+		searchRequest.setQueryString(queryString);
+		searchRequest.setIndexName(indexName);
+		ArrayList<HciFacetRequests> facetRequests = new ArrayList<HciFacetRequests>();
+		List<Node> nodes = ele.selectNodes("./facetRequests/facet");
+		
+		for (Node node : nodes) {
+			HciFacetRequests facets = new HciFacetRequests();
+			facets.setFieldName(node.valueOf("@field"));
+			facets.setMaxCount(Integer.parseInt(node.valueOf("@maxCount")));
+			facets.setMinCount(Integer.parseInt(node.valueOf("@minCount")));
+			List<Node> subNodes = node.selectNodes("termFilter");
+			ArrayList<String> termFilters = new ArrayList<String>();
+			for (Node subNode : subNodes) {
+				termFilters.add(subNode.getText());
+			}
+			facets.setTermFilters(termFilters);
+			facetRequests.add(facets);
+		}
+		if (indexName.equals(lastIndex) && queryString.equals(lastQuery)) {
+			offset += ITEMSTORETURN;
+		} else {
+			offset = 0;
+		}
+		searchRequest.setOffset(offset);
+		searchRequest.setItemsToReturn(ITEMSTORETURN);
+		searchRequest.setFacetRequests(facetRequests);
+		lastIndex = indexName;
+		lastQuery = queryString;
 	}
 
 	private String serializeToJson(Object obj) {
@@ -140,10 +134,6 @@ public class HciDataAccess extends SimpleDataAccess {
 	@Override
 	public ConnectionType getConnectionType() {
 		return ConnectionType.HCI;
-	}
-	
-	private String buildUrl() {
-		return connection.getConnectionInfo().getUrl();
 	}
 	
 	protected static class HciDataSourceQuery implements IDataSourceQuery {

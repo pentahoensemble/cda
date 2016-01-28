@@ -3,6 +3,7 @@ package pt.webdetails.cda.connections.hci;
 import java.util.List;
 
 public class HciSearchResultsModel {
+	private String indexName;
 	private List<HciResultsItemModel> results;
 	private List<HciFacetResultModel> facets;
 	private Long hitCount;
@@ -37,5 +38,13 @@ public class HciSearchResultsModel {
 
 	public void setHitCount(Long hitCount) {
 		this.hitCount = hitCount;
+	}
+
+	public String getIndexName() {
+		return indexName;
+	}
+
+	public void setIndexName(String indexName) {
+		this.indexName = indexName;
 	}	
 }

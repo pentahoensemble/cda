@@ -10,10 +10,24 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.16.60:8080/</Url>
+            <Url>http://10.76.17.150:8888/api/search/query</Url>
 			<Property name="HciUser"></Property>
 			<Property name="HciPassword"></Property>
         </Connection>
     </DataSources>
  
+ 	<DataAccess id="2" connection="1" type="hci" access="public">
+		<Name>Ensemble search query</Name>
+        <Query><![CDATA[
+			<HCISearch>
+			 	<query></query>
+			 	<schemaName>TestIndex</schemaName>
+				<facetRequests>
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
+				     	<termFilter>Content1</termFilter>
+					 </facet>
+				</facetRequests>
+			</HCISearch>]]>
+		</Query>
+    </DataAccess>
 </CDADescriptor>

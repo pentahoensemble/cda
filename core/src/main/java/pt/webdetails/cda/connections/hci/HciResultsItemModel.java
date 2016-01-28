@@ -1,29 +1,33 @@
 package pt.webdetails.cda.connections.hci;
 
 import java.util.List;
+import java.util.Map;
 
 public class HciResultsItemModel {
 	
 	private String id;
 	private String title;
 	private String link;
-	private String previewText;
-	private String customTextFields;
+	private List<String> previewText;
 	private Double relevance;
+	private Map<String, List<String>> metadata;
+	private List<DisplayFieldModel> displayFields; 
 	private List<HciFacetResultModel> facets;
 	
 	public HciResultsItemModel() {}
 	
 	public HciResultsItemModel(String id, String title, String link, 
-								String previewText, String customTextFields, 
-								Double relevance, List<HciFacetResultModel> facets) {
+								List<String> previewText, List<DisplayFieldModel> displayFields,
+								Double relevance, Map<String, List<String>> metadata,
+								List<HciFacetResultModel> facets) {
 		this.id = id;
 		this.title = title;
 		this.link = link;
 		this.previewText = previewText;
-		this.customTextFields = customTextFields;
+		this.displayFields = displayFields;
 		this.relevance = relevance;
 		this.facets = facets;
+		this.metadata = metadata;
 	}
 	
 	public String getId() {
@@ -50,20 +54,12 @@ public class HciResultsItemModel {
 		this.link = link;
 	}
 
-	public String getPreviewText() {
+	public List<String> getPreviewText() {
 		return previewText;
 	}
 
-	public void setPreviewText(String previewText) {
+	public void setPreviewText(List<String> previewText) {
 		this.previewText = previewText;
-	}
-
-	public String getCustomTextFields() {
-		return customTextFields;
-	}
-
-	public void setCustomTextFields(String customTextFields) {
-		this.customTextFields = customTextFields;
 	}
 
 	public Double getRelevance() {
@@ -80,6 +76,22 @@ public class HciResultsItemModel {
 
 	public void setFacets(List<HciFacetResultModel> facets) {
 		this.facets = facets;
+	}
+
+	public Map<String, List<String>> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Map<String, List<String>> metadata) {
+		this.metadata = metadata;
+	}
+
+	public List<DisplayFieldModel> getDisplayFields() {
+		return displayFields;
+	}
+
+	public void setDisplayFields(List<DisplayFieldModel> displayFields) {
+		this.displayFields = displayFields;
 	}
 
 }

@@ -10,7 +10,7 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.16.60:8080/</Url>
+            <Url>http://10.76.17.150:8888/api/search/query</Url>
 			<Property name="HciUser"></Property>
 			<Property name="HciPassword"></Property>
         </Connection>
@@ -20,13 +20,17 @@
 		<Name>Ensemble search query</Name>
         <Query><![CDATA[
 			<HCISearch>
-			 	<query>queryString</query>
+			 	<query></query>
 			 	<schemaName>TestIndex</schemaName>
 				<facetRequests>
-				 	 <facet field="facet-field-name" minCount="0" maxCount="0">
-				     	<termFilter>termFilterString</termFilter>
-				     	<termFilter>termFilterString</termFilter>
-					</facet>
+				 	 <!-- <facet field="Content-Type" minCount="0" maxCount="0">
+				     	<termFilter>Content1</termFilter>
+				     	<termFilter>Content2</termFilter>
+					 </facet> -->
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
+				     	<termFilter>Content1</termFilter>
+				     	<!-- <termFilter>Content2</termFilter> -->
+					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
 		</Query>

@@ -8,10 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class HciSearchRequest {
 	
-	@XmlElement(name="schemaName")
-	private String schemaName;
+	private String indexName;
 	
-	@XmlElement(name="query")
 	private String queryString;
 	
 	private int offset;
@@ -22,21 +20,21 @@ public class HciSearchRequest {
 	
 	public HciSearchRequest() {}
 	
-	public HciSearchRequest(String schemaName, String queryString, int offset,
+	public HciSearchRequest(String indexName, String queryString, int offset,
 							int itemsToReturn, ArrayList<HciFacetRequests> facetRequests) {
-		this.setSchemaName(schemaName);
+		this.setIndexName(indexName);
 		this.setQueryString(queryString);
 		this.setOffset(offset);
 		this.setItemsToReturn(itemsToReturn);
 		this.setFacetRequests(facetRequests);
 	}
 
-	public String getSchemaName() {
-		return schemaName;
+	public String getIndexName() {
+		return indexName;
 	}
 
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
+	public void setIndexName(String indexName) {
+		this.indexName = indexName;
 	}
 
 	public String getQueryString() {
