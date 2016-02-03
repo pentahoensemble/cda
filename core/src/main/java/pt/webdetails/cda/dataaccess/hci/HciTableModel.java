@@ -19,6 +19,7 @@ public class HciTableModel extends AbstractTableModel {
 	private List<HciResultsItemModel> searchData = new ArrayList<HciResultsItemModel>();
 
 	private static LinkedHashMap<Integer, Method> columnMap = new LinkedHashMap<Integer, Method>();
+	private static List<String> columnNames = new ArrayList<String>();
 	
 	public HciTableModel() {}
 	
@@ -35,9 +36,11 @@ public class HciTableModel extends AbstractTableModel {
 							metadataRefCount = count;
 							LinkedHashMap<String, List<String>> metadata = (LinkedHashMap<String, List<String>>) pd.getReadMethod().invoke(searchData.get(0));
 							for (String property : metadata.keySet()) {
+								columnNames.add(property.toUpperCase());
 								columnMap.put(count++, pd.getReadMethod());
 							}
 						} else {
+							  columnNames.add(pd.getName().toUpperCase());
 							  columnMap.put(count++, pd.getReadMethod());
 						}
 					}
@@ -57,6 +60,11 @@ public class HciTableModel extends AbstractTableModel {
 	@Override
 	public int getColumnCount() {
 		return columnCount;
+	}
+	
+	@Override
+	public String getColumnName(int index) {
+	    return columnNames.get(index);
 	}
 
 	@SuppressWarnings("unchecked")
