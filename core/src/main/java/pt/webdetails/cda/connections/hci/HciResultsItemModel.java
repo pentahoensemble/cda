@@ -1,7 +1,7 @@
 package pt.webdetails.cda.connections.hci;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HciResultsItemModel {
 	
@@ -10,7 +10,7 @@ public class HciResultsItemModel {
 	private String link;
 	private List<String> previewText;
 	private Double relevance;
-	private Map<String, List<String>> metadata;
+	private LinkedHashMap<String, List<String>> metadata;
 	private List<DisplayFieldModel> displayFields; 
 	private List<HciFacetResultModel> facets;
 	
@@ -18,7 +18,7 @@ public class HciResultsItemModel {
 	
 	public HciResultsItemModel(String id, String title, String link, 
 								List<String> previewText, List<DisplayFieldModel> displayFields,
-								Double relevance, Map<String, List<String>> metadata,
+								Double relevance, LinkedHashMap<String, List<String>> metadata,
 								List<HciFacetResultModel> facets) {
 		this.id = id;
 		this.title = title;
@@ -78,11 +78,11 @@ public class HciResultsItemModel {
 		this.facets = facets;
 	}
 
-	public Map<String, List<String>> getMetadata() {
+	public LinkedHashMap<String, List<String>> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Map<String, List<String>> metadata) {
+	public void setMetadata(LinkedHashMap<String, List<String>> metadata) {
 		this.metadata = metadata;
 	}
 

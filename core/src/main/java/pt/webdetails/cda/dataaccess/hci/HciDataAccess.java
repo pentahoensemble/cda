@@ -64,7 +64,7 @@ public class HciDataAccess extends SimpleDataAccess {
 		return query;
 	}
 
-	private String buildRequest() {
+	protected String buildRequest() {
 		HciSearchRequest searchRequest = new HciSearchRequest();	
 		SAXReader reader = new SAXReader();
 		Document doc;
@@ -80,7 +80,7 @@ public class HciDataAccess extends SimpleDataAccess {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void parseXMLQuery(HciSearchRequest searchRequest, Element ele) {
+	protected void parseXMLQuery(HciSearchRequest searchRequest, Element ele) {
 		String indexName = (String) ele.selectObject( "string(./schemaName)" );
 		String queryString = (String) ele.selectObject( "string(./query)" );
 		searchRequest.setQueryString(queryString);
@@ -113,7 +113,7 @@ public class HciDataAccess extends SimpleDataAccess {
 		lastQuery = queryString;
 	}
 
-	private String serializeToJson(Object obj) {
+	protected String serializeToJson(Object obj) {
 		Gson gson = null;
 		GsonBuilder builder = new GsonBuilder();
 		builder.setPrettyPrinting();
@@ -121,7 +121,7 @@ public class HciDataAccess extends SimpleDataAccess {
 		return gson.toJson(obj);
 	}
 	
-	public static Object deserializeFromJson(String json, Class<?> classObject) {
+	protected Object deserializeFromJson(String json, Class<?> classObject) {
 		Gson gson = new Gson();
 		return gson.fromJson(json, classObject);
 	}
