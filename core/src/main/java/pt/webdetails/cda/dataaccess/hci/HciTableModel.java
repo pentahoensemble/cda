@@ -6,11 +6,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import pt.webdetails.cda.connections.hci.HciResultsItemModel;
 
 public class HciTableModel extends AbstractTableModel {
+	
+	private static final Log logger = LogFactory.getLog( HciTableModel.class );
 	
 	private static int columnCount;
 	private static int metadataRefCount;
@@ -47,7 +53,7 @@ public class HciTableModel extends AbstractTableModel {
 				}
 				columnCount = count;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug("Error in parsing search data results: " + e.getLocalizedMessage());
 			}
 		}
 	}
@@ -80,7 +86,7 @@ public class HciTableModel extends AbstractTableModel {
 				value = metadataList.get(columnIndex-metadataRefCount);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Error in retriving HCI table model values: " + e.getLocalizedMessage());
 		}
 		return value;
 	}

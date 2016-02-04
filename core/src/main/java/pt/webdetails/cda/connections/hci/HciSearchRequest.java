@@ -2,7 +2,6 @@ package pt.webdetails.cda.connections.hci;
 
 import java.util.ArrayList;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement

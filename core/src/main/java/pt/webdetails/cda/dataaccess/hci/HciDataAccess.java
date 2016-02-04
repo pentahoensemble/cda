@@ -8,12 +8,15 @@ import java.util.Map;
 
 import javax.swing.table.TableModel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.pentaho.reporting.engine.classic.core.ParameterDataRow;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,10 +31,8 @@ import pt.webdetails.cda.utils.HttpUtil;
 import pt.webdetails.cda.utils.HttpUtil.Response;
 
 public class HciDataAccess extends SimpleDataAccess {
-	private static int offset;
-	private static String lastIndex;
-	private static String lastQuery;
-	private static final int ITEMSTORETURN = 10;
+	
+	private static final Log logger = LogFactory.getLog( HciDataAccess.class );
 	
 	public HciDataAccess() {}
 	
@@ -59,12 +60,13 @@ public class HciDataAccess extends SimpleDataAccess {
 				query = new HciDataSourceQuery (model, null);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Error in performing HCI search query: " + e.getLocalizedMessage());
 		}
 		return query;
 	}
 
 	protected String buildRequest() {
+		logger.debug( "Building HCI search request" );
 		HciSearchRequest searchRequest = new HciSearchRequest();	
 		SAXReader reader = new SAXReader();
 		Document doc;
@@ -72,7 +74,7 @@ public class HciDataAccess extends SimpleDataAccess {
 			doc = (Document) reader.read(new StringReader(getQuery()));
 			parseXMLQuery(searchRequest, doc.getRootElement());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("Error in parsing XML query: " + e.getLocalizedMessage());
 		} 
 		
 		String request = serializeToJson(searchRequest);
@@ -101,16 +103,18 @@ public class HciDataAccess extends SimpleDataAccess {
 			facets.setTermFilters(termFilters);
 			facetRequests.add(facets);
 		}
-		if (indexName.equals(lastIndex) && queryString.equals(lastQuery)) {
-			offset += ITEMSTORETURN;
-		} else {
-			offset = 0;
+		String offset = (String) ele.selectObject( "string(./offset)" );
+		if (offset != null && !offset.isEmpty()) {
+			searchRequest.setOffset(Integer.parseInt(offset));
 		}
-		searchRequest.setOffset(offset);
-		searchRequest.setItemsToReturn(ITEMSTORETURN);
+		
+		String itemsToReturn = (String) ele.selectObject( "string(./itemsToReturn)" );
+		if (itemsToReturn != null && !itemsToReturn.isEmpty()) {
+			searchRequest.setItemsToReturn(Integer.parseInt(itemsToReturn));
+		} else {
+			searchRequest.setItemsToReturn(100);
+		}
 		searchRequest.setFacetRequests(facetRequests);
-		lastIndex = indexName;
-		lastQuery = queryString;
 	}
 
 	protected String serializeToJson(Object obj) {

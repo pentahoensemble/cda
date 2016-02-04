@@ -10,29 +10,69 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.17.154:8888/api/search/query</Url>
+            <Url>http://10.76.16.213:8888/api/search/query</Url>
 			<Property name="HciUser"></Property>
 			<Property name="HciPassword"></Property>
         </Connection>
     </DataSources>
  
- 	<DataAccess id="2" connection="1" type="hci" access="public">
+ 	<DataAccess id="1" connection="1" type="hci" access="public">
 		<Name>Ensemble search query</Name>
         <Query><![CDATA[
 			<HCISearch>
 			 	<query></query>
-			 	<schemaName>TestIndex2</schemaName>
+			 	<schemaName>jeopardy</schemaName>
+			 	<offset>0</offset>
+			 	<itemsToReturn>5</itemsToReturn>
 				<facetRequests>
-				 	 <!-- <facet field="Content-Type" minCount="0" maxCount="0">
-				     	<termFilter>Content1</termFilter>
-				     	<termFilter>Content2</termFilter>
-					 </facet> -->
+				 	 <facet field="Content-Type" minCount="0" maxCount="0">
+					 </facet>
 					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
-				     	<termFilter>Content1</termFilter>
-				     	<!-- <termFilter>Content2</termFilter> -->
+				     	<termFilter>jeopardy</termFilter>
 					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
 		</Query>
     </DataAccess>
+    
+    <DataAccess id="2" connection="1" type="hcifacets" access="public">
+		<Name>Ensemble search query</Name>
+        <Query><![CDATA[
+			<HCISearch>
+			 	<query></query>
+			 	<schemaName>jeopardy</schemaName>
+			 	<offset>0</offset>
+			 	<itemsToReturn>5</itemsToReturn>
+			 	<facetRequests>
+				 	 <facet field="Content-Type" minCount="0" maxCount="0">
+					 </facet>
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
+				     	<termFilter>jeopardy</termFilter>
+					 </facet>
+				</facetRequests>
+			</HCISearch>]]>
+		</Query>
+		<FacetName>Content-Type</FacetName>
+    </DataAccess>
+    
+    <DataAccess id="3" connection="1" type="hcifacets" access="public">
+		<Name>Ensemble search query</Name>
+        <Query><![CDATA[
+			<HCISearch>
+			 	<query></query>
+			 	<schemaName>jeopardy</schemaName>
+			 	<offset>0</offset>
+			 	<itemsToReturn>5</itemsToReturn>
+			 	<facetRequests>
+				 	 <facet field="Content-Type" minCount="0" maxCount="0">
+					 </facet>
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
+				     	<termFilter>jeopardy</termFilter>
+					 </facet>
+				</facetRequests>
+			</HCISearch>]]>
+		</Query>
+		<FacetName>HCI-dataSourceName</FacetName>
+    </DataAccess>
+    
 </CDADescriptor>
