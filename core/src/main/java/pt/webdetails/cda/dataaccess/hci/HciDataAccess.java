@@ -16,6 +16,7 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.pentaho.reporting.engine.classic.core.ParameterDataRow;
 import org.pentaho.reporting.engine.classic.core.cache.CachingDataFactory;
+import org.pentaho.reporting.engine.classic.core.util.CloseableTableModel;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -156,7 +157,12 @@ public class HciDataAccess extends SimpleDataAccess {
 	    }
 
 	    @Override
-	    public void closeDataSource() throws QueryException {}
+	    public void closeDataSource() throws QueryException {
+	    	if ( getTableModel() instanceof CloseableTableModel ) {
+	            final CloseableTableModel ctm = (CloseableTableModel) getTableModel();
+	            ctm.close();
+	        }
+	    }
 	}
 
 }

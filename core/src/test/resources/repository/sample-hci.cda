@@ -10,7 +10,7 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.16.213:8888/api/search/query</Url>
+            <Url>http://10.76.17.155:8888/api/search/query</Url>
 			<Property name="HciUser"></Property>
 			<Property name="HciPassword"></Property>
         </Connection>
@@ -23,11 +23,11 @@
 			 	<query></query>
 			 	<schemaName>jeopardy</schemaName>
 			 	<offset>0</offset>
-			 	<itemsToReturn>5</itemsToReturn>
+			 	<itemsToReturn>10</itemsToReturn>
 				<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
-					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
 				     	<termFilter>jeopardy</termFilter>
 					 </facet>
 				</facetRequests>
@@ -40,14 +40,14 @@
         <Query><![CDATA[
 			<HCISearch>
 			 	<query></query>
-			 	<schemaName>jeopardy</schemaName>
+			 	<schemaName>TestIndex2</schemaName>
 			 	<offset>0</offset>
-			 	<itemsToReturn>5</itemsToReturn>
+			 	<itemsToReturn>10</itemsToReturn>
 			 	<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
-					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
-				     	<termFilter>jeopardy</termFilter>
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
+				     	<termFilter>Content1</termFilter>
 					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
@@ -62,11 +62,11 @@
 			 	<query></query>
 			 	<schemaName>jeopardy</schemaName>
 			 	<offset>0</offset>
-			 	<itemsToReturn>5</itemsToReturn>
+			 	<itemsToReturn>10</itemsToReturn>
 			 	<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
-					 <facet field="HCI-dataSourceName" minCount="0" maxCount="1">
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
 				     	<termFilter>jeopardy</termFilter>
 					 </facet>
 				</facetRequests>

@@ -41,8 +41,13 @@ public class HciTableModel extends AbstractTableModel {
 						if (pd.getName().equals("metadata")) {
 							metadataRefCount = count;
 							LinkedHashMap<String, List<String>> metadata = (LinkedHashMap<String, List<String>>) pd.getReadMethod().invoke(searchData.get(0));
-							for (String property : metadata.keySet()) {
-								columnNames.add(property.toUpperCase());
+							if (metadata != null) {
+								for (String property : metadata.keySet()) {
+									columnNames.add(property.toUpperCase());
+									columnMap.put(count++, pd.getReadMethod());
+								}
+							} else {
+								columnNames.add(pd.getName().toUpperCase());
 								columnMap.put(count++, pd.getReadMethod());
 							}
 						} else {
