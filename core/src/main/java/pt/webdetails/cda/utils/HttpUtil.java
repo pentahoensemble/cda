@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -14,6 +15,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
+import pt.webdetails.cda.utils.HttpUtil.Response;
 
 /**
  * 
@@ -47,6 +50,15 @@ public class HttpUtil {
     loadHeader(postRequest, headerMap);
     postRequest.setEntity(new StringEntity(payload));
     return execute(postRequest);
+  }
+  
+
+  public static Response doPost(String url, UrlEncodedFormEntity payload, 
+		  Map<String, String> headerMap) throws IOException {
+	  HttpPost postRequest = new HttpPost(url);
+	  loadHeader(postRequest, headerMap);
+	  postRequest.setEntity(payload);
+   	  return execute(postRequest);
   }
 
   private static void loadHeader(HttpRequestBase request,
@@ -108,5 +120,6 @@ public class HttpUtil {
       return statusCode;
     }
   }
+
 
 }

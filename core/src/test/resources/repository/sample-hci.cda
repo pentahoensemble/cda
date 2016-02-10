@@ -10,7 +10,7 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.17.155:8888/api/search/query</Url>
+            <Url>http://10.76.17.155:8888</Url>
 			<Property name="HciUser"></Property>
 			<Property name="HciPassword"></Property>
         </Connection>

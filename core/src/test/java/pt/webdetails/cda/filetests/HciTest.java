@@ -20,6 +20,7 @@ import org.junit.Assert;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import pt.webdetails.cda.connections.hci.HciAuthResponse;
 import pt.webdetails.cda.connections.hci.HciConnection;
 import pt.webdetails.cda.connections.hci.HciFacetResultModel;
 import pt.webdetails.cda.connections.hci.HciFacetTermCount;
@@ -42,10 +43,11 @@ public class HciTest extends CdaTestCase {
 	    queryOptions.setDataAccessId( "1" );
 
 		LocalTestServer server = new LocalTestServer(null, null);
-	    server.register("/test/*", new TestHciHttpHandler());
+	    server.register("/test/api/search/query", new TestHciHttpHandler());
+	    server.register("/test/auth/oauth", new TestHciAuthHttpHandler());
 	    server.start();
 	    
-	    String serverUrl = "http:/" + server.getServiceAddress() + "/test/api/search/query";
+	    String serverUrl = "http:/" + server.getServiceAddress() + "/test";
 	    
 	    HciConnection connection = (HciConnection) cdaSettings.getConnection("1");
 	    
@@ -77,11 +79,12 @@ public class HciTest extends CdaTestCase {
 	    QueryOptions queryOptions = new QueryOptions();
 	    queryOptions.setDataAccessId( "2" );
 
-		LocalTestServer server = new LocalTestServer(null, null);
-	    server.register("/test/*", new TestHciHttpHandler());
+	    LocalTestServer server = new LocalTestServer(null, null);
+	    server.register("/test/api/search/query", new TestHciHttpHandler());
+	    server.register("/test/auth/oauth", new TestHciAuthHttpHandler());
 	    server.start();
 	    
-	    String serverUrl = "http:/" + server.getServiceAddress() + "/test/api/search/query";
+	    String serverUrl = "http:/" + server.getServiceAddress() + "/test";
 	    
 	    HciConnection connection = (HciConnection) cdaSettings.getConnection("1");
 	    
@@ -112,11 +115,12 @@ public class HciTest extends CdaTestCase {
 	    QueryOptions queryOptions = new QueryOptions();
 	    queryOptions.setDataAccessId( "3" );
 
-		LocalTestServer server = new LocalTestServer(null, null);
-	    server.register("/test/*", new TestHciHttpHandler());
+	    LocalTestServer server = new LocalTestServer(null, null);
+	    server.register("/test/api/search/query", new TestHciHttpHandler());
+	    server.register("/test/auth/oauth", new TestHciAuthHttpHandler());
 	    server.start();
 	    
-	    String serverUrl = "http:/" + server.getServiceAddress() + "/test/api/search/query";
+	    String serverUrl = "http:/" + server.getServiceAddress() + "/test";
 	    
 	    HciConnection connection = (HciConnection) cdaSettings.getConnection("1");
 	    
@@ -183,6 +187,37 @@ public class HciTest extends CdaTestCase {
 		    	
 		    	HciSearchResultsModel searchResults = new HciSearchResultsModel(itemsList, facetsList);
 				return serializeToJson(searchResults);
+			}
+
+			private String serializeToJson(Object obj) {
+				Gson gson = null;
+				GsonBuilder builder = new GsonBuilder();
+				builder.setPrettyPrinting();
+				gson = builder.create();
+				return gson.toJson(obj);
+			}
+	  }
+	  
+	  private static class TestHciAuthHttpHandler implements HttpRequestHandler {
+
+		    @Override
+		    public void handle(HttpRequest request, HttpResponse response,
+		        HttpContext context) throws HttpException, IOException {
+		      if (request.getRequestLine().toString().startsWith("POST")) {
+		        if (request instanceof BasicHttpEntityEnclosingRequest) {
+		        	response.setStatusCode(200);
+			        response.setEntity(new StringEntity(buildResponseString()));
+		        }
+		      } else {
+				response.setStatusCode(200);
+		        response.setEntity(new StringEntity(buildResponseString()));
+		      }
+
+		    }
+
+			private String buildResponseString() {
+				HciAuthResponse response = new HciAuthResponse("eyJraWQiOiI4YTA5YzZmOS1hZDY2LTQ", 7200);
+				return serializeToJson(response);
 			}
 
 			private String serializeToJson(Object obj) {

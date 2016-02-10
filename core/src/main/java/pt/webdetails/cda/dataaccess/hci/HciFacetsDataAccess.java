@@ -39,10 +39,12 @@ public class HciFacetsDataAccess extends HciDataAccess {
 		HciFacetTableModel model = null;
 		try {
 			connection = (HciConnection) getCdaSettings().getConnection( getConnectionId() );
-			url = connection.getConnectionInfo().getUrl();
+			url = String.format("%s/api/search/query", connection.getConnectionInfo().getUrl());
 			String jsonRequest = buildRequest();
+			String authToken = getAuthToken(connection);
 			Map<String, String> headerMap = new HashMap<String, String>();
 			headerMap.put("Content-Type", "application/json");
+			headerMap.put("Authorization", authToken);
 			Response response = HttpUtil.doPost(url, jsonRequest, headerMap);
 			if (response.getStatusCode() == 200) {
 				String body = response.getBody();

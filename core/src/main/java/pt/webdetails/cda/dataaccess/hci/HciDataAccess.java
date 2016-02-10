@@ -10,6 +10,9 @@ import javax.swing.table.TableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
@@ -22,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import pt.webdetails.cda.connections.ConnectionCatalog.ConnectionType;
+import pt.webdetails.cda.connections.hci.HciAuthResponse;
 import pt.webdetails.cda.connections.hci.HciConnection;
 import pt.webdetails.cda.connections.hci.HciFacetRequests;
 import pt.webdetails.cda.connections.hci.HciSearchRequest;
@@ -49,10 +53,12 @@ public class HciDataAccess extends SimpleDataAccess {
 		HciConnection connection;
 		try {
 			connection = (HciConnection) getCdaSettings().getConnection( getConnectionId() );
-			url = connection.getConnectionInfo().getUrl();
+			url = String.format("%s/api/search/query", connection.getConnectionInfo().getUrl());
 			String jsonRequest = buildRequest();
+			String authToken = getAuthToken(connection);
 			Map<String, String> headerMap = new HashMap<String, String>();
 			headerMap.put("Content-Type", "application/json");
+			headerMap.put("Authorization", authToken);
 			Response response = HttpUtil.doPost(url, jsonRequest, headerMap);
 			if (response.getStatusCode() == 200) {
 				String body = response.getBody();
@@ -64,6 +70,35 @@ public class HciDataAccess extends SimpleDataAccess {
 			logger.debug("Error in performing HCI search query: " + e.getLocalizedMessage());
 		}
 		return query;
+	}
+
+	protected String getAuthToken(HciConnection connection) {
+		String token = null;
+		List<NameValuePair> paramList = new ArrayList<NameValuePair>();
+		paramList.add(new BasicNameValuePair("grant_type", "password"));
+		paramList.add(new BasicNameValuePair("username", connection.getConnectionInfo().getUsername()));
+		paramList.add(new BasicNameValuePair("password", connection.getConnectionInfo().getPassword()));
+		paramList.add(new BasicNameValuePair("scope", "*"));
+		paramList.add(new BasicNameValuePair("client_secret", "hci-client"));
+		paramList.add(new BasicNameValuePair("client_id", "hci-client"));
+		
+		String url = String.format("%s/auth/oauth", connection.getConnectionInfo().getUrl());
+		
+		Map<String, String> headerMap = new HashMap<String, String>();
+		headerMap.put("Content-Type", "application/x-www-form-urlencoded");
+		
+		try {
+			Response response = HttpUtil.doPost(url, new UrlEncodedFormEntity(paramList), headerMap);
+			if (response.getStatusCode() == 200) {
+				String body = response.getBody();
+				HciAuthResponse responseModel = (HciAuthResponse) deserializeFromJson(body, HciAuthResponse.class);
+				token = responseModel.getAccessToken();
+			}
+		} catch (Exception e) {
+			logger.debug("Error in obtaining auth token: " + e.getLocalizedMessage());
+		}
+		
+		return "Bearer " + token;
 	}
 
 	protected String buildRequest() {
