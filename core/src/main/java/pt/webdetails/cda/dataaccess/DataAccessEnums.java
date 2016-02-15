@@ -48,7 +48,8 @@ public class DataAccessEnums {
     SQL( "sql" ),
     UNION( "union" ),
     XPATH( "xPath" ),
-    HCI("hci");
+    HCI("hci"),
+    HCI_FACETS("hcifacets");
 
     private String type;
 

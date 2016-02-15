@@ -47,6 +47,7 @@ import pt.webdetails.cda.dataaccess.UnionCompoundDataAccess;
 import pt.webdetails.cda.dataaccess.UnsupportedDataAccessException;
 import pt.webdetails.cda.dataaccess.XPathDataAccess;
 import pt.webdetails.cda.dataaccess.hci.HciDataAccess;
+import pt.webdetails.cda.dataaccess.hci.HciFacetsDataAccess;
 import pt.webdetails.cda.utils.TableModelUtils;
 import pt.webdetails.cda.utils.Util;
 import pt.webdetails.cda.xml.DomTraversalHelper;
@@ -190,6 +191,8 @@ public class CdaSettings {
           return new XPathDataAccess( element );
         case HCI:
             return new HciDataAccess( element );
+        case HCI_FACETS:
+        	return new HciFacetsDataAccess( element );
       }
     }
     return null;

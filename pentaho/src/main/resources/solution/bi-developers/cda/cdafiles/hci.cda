@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CDADescriptor>
+
+    <!-- DataSource definition. 
+	
+	Type controls what the datasource type is.
+	The connection and query controls how the data is fetched. These values
+	are specific to each access type
+
+	-->
+    <DataSources>
+        <Connection id="1" type="hds.hci">
+            <Url>http://10.76.17.150:8888/api/search/query</Url>
+			<Property name="HciUser"></Property>
+			<Property name="HciPassword"></Property>
+        </Connection>
+    </DataSources>
+ 
+ 	<DataAccess id="2" connection="1" type="hci" access="public">
+		<Name>Ensemble search query</Name>
+        <Query><![CDATA[
+			<HCISearch>
+			 	<query></query>
+			 	<schemaName>TestIndex</schemaName>
+				<facetRequests>
+					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
+				     	<termFilter>Content1</termFilter>
+					 </facet>
+				</facetRequests>
+			</HCISearch>]]>
+		</Query>
+    </DataAccess>
+</CDADescriptor>

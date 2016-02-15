@@ -25,5 +25,17 @@ public class HciConnectionInfo {
 	public String getPassword() {
 		return password;
 	}
+	
+	public void setUrl(String url) {
+		HciConnectionInfo.url = url;
+	}
+
+	public void setUsername(String userName) {
+		HciConnectionInfo.userName = userName;
+	}
+
+	public void setPassword(String password) {
+		HciConnectionInfo.password = password;
+	}
 
 }
