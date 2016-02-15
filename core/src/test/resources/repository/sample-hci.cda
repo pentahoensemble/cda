@@ -10,9 +10,9 @@
 	-->
     <DataSources>
         <Connection id="1" type="hds.hci">
-            <Url>http://10.76.17.155:8888</Url>
-			<Property name="HciUser"></Property>
-			<Property name="HciPassword"></Property>
+            <Url>https://127.0.0.1:8888</Url>
+			<Property name="HciUser">username</Property>
+			<Property name="HciPassword">password</Property>
         </Connection>
     </DataSources>
  
@@ -21,14 +21,14 @@
         <Query><![CDATA[
 			<HCISearch>
 			 	<query></query>
-			 	<schemaName>jeopardy</schemaName>
+			 	<schemaName>indexName</schemaName>
 			 	<offset>0</offset>
 			 	<itemsToReturn>10</itemsToReturn>
 				<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
 					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
-				     	<termFilter>jeopardy</termFilter>
+				     	<termFilter>sampleDataSource</termFilter>
 					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
@@ -40,14 +40,14 @@
         <Query><![CDATA[
 			<HCISearch>
 			 	<query></query>
-			 	<schemaName>TestIndex2</schemaName>
+			 	<schemaName>indexName</schemaName>
 			 	<offset>0</offset>
 			 	<itemsToReturn>10</itemsToReturn>
 			 	<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
 					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
-				     	<termFilter>Content1</termFilter>
+				     	<termFilter>sampleDataSource</termFilter>
 					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
@@ -60,14 +60,14 @@
         <Query><![CDATA[
 			<HCISearch>
 			 	<query></query>
-			 	<schemaName>jeopardy</schemaName>
+			 	<schemaName>indexName</schemaName>
 			 	<offset>0</offset>
 			 	<itemsToReturn>10</itemsToReturn>
 			 	<facetRequests>
 				 	 <facet field="Content-Type" minCount="0" maxCount="0">
 					 </facet>
 					 <facet field="HCI-dataSourceName" minCount="0" maxCount="0">
-				     	<termFilter>jeopardy</termFilter>
+				     	<termFilter>sampleDataSource</termFilter>
 					 </facet>
 				</facetRequests>
 			</HCISearch>]]>
